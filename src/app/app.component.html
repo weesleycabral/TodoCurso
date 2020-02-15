@@ -1,0 +1,41 @@
+<h1 class="title animated jackInTheBox">{{ title }}</h1>
+<br>
+<br>
+<p *ngIf="todos.length === 0">Nenhuma tarefa encontrada!</p>
+<ul class="animated flipInX" *ngIf="mode=='list'" >
+  <li *ngFor="let todo of todos">
+    {{ todo.id }}. {{ todo.title }} -
+    <button (click)="markAsDone(todo)" *ngIf="!todo.done">Concluir</button>
+    <button (click)="markAsUndone(todo)" *ngIf="todo.done">Refazer</button> |
+    <button (click)="remove(todo)">Remover</button>
+  </li>
+</ul>
+
+<div id="modal" *ngIf="mode=='add'" class="animated flipInX">
+<form [formGroup]="todoForm">
+  <fieldset>
+    <label>Adicionar tarefa: &nbsp; </label>
+    <input class="formControl" type="text" placeholder="Titulo da tarefa" maxlength="60" formControlName="title"
+      [ngClass]="{'is-invalid': todoForm.get('title').errors && todoForm.get('title').touched}" maxlength="60"> &nbsp;
+    <button id="button" [disabled]="todoForm.invalid" (click)="addTodo()">Salvar</button>
+    <div class="invalid-feedback" *ngIf="todoForm.get('title').hasError('required') && todoForm.get('title').touched">
+      Titulo é obrigatório.
+    </div>
+    <div class="invalid-feedback" *ngIf="todoForm.get('title').hasError('minlength') && todoForm.get('title').touched">
+      Mínimo de 3 caracteres.
+    </div>
+    <div class="invalid-feedback" *ngIf="todoForm.get('title').hasError('maxlength') && todoForm.get('title').touched">
+      Máximo de 60 caracteres.
+    </div>
+  </fieldset>
+</form>
+</div>
+
+<button id="button" class="add-button animated fadeInUp button" (click)="changeMode('add')" *ngIf="mode=='list'">
+<i class="fas fa-plus-circle"></i>
+NOVA TAREFA
+</button>
+<button id="button" class="add-button animated fadeInUp button" (click)="changeMode('list')" *ngIf="mode=='add'">
+  <i class="fas fa-times"></i>
+CANCELAR
+  </button>
